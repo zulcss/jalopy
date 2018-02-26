@@ -1,0 +1,23 @@
+version: '2'
+services:
+    app:
+        build: app/
+        image: app
+        ports:
+            - 5000
+    lb:
+        image: 'dockercloud/haproxy:latest'
+        links:
+            - app
+        ports:
+            - 80:80
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+    db:
+        build: dynamodb/
+        image: dynamo
+        hostname: db
+        volumes:
+            - ./data:/data
+        ports:
+            - "8000:8000"
